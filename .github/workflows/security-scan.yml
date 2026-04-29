@@ -22,7 +22,7 @@ jobs:
           python scanner/scanner.py ./test_project/test_que_pasa_ci
 
       - name: Subir resultados SARIF
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: report.sarif
 
