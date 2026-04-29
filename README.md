@@ -1,1 +1,77 @@
 # security-scanner-pac
+
+## Descripción
+
+**security-scanner-pac** es una herramienta sencilla para escanear proyectos en busca de archivos y contenidos potencialmente inseguros, basada en políticas configurables. 
+
+
+## Justificación y Marco Teórico
+
+La exposición accidental de contraseñas, claves privadas y otra información sensible dentro del código fuente representa una de las vulnerabilidades más comunes en el desarrollo de software. Este proyecto surge para demostrar cómo la seguridad puede integrarse directamente en el proceso de desarrollo mediante enfoques automatizados, aplicando el paradigma de "Policy as Code" (PaC) y el principio de "Shift Left" en DevSecOps.
+
+Puedes consultar el documento completo con toda la teoría y justificación aquí:
+
+👉 [Justificación y Marco Teórico del Proyecto](https://pruebacorreoescuelaingeduco-my.sharepoint.com/:w:/g/personal/andres_cardozo-m_mail_escuelaing_edu_co/IQD3YREPCx0MQ6D38vMMeQDsAVGpAF3P8Z0GIh48NKdF4DU?e=9IhLpY)
+
+### Resumen de la teoría
+
+- **Security as Code (SaC):** Define y ejecuta controles de seguridad mediante código, permitiendo automatización, trazabilidad y consistencia.
+- **Policy as Code (PaC):** Expresa políticas de seguridad como reglas programables evaluadas automáticamente.
+- **Automatización de controles:** Permite validar seguridad en pipelines CI/CD y detectar secretos antes de producción.
+- **Shift Left:** Lleva la seguridad a etapas tempranas del desarrollo, reduciendo costos y riesgos.
+- **DevSecOps:** Integra la seguridad como parte continua y compartida en el ciclo de desarrollo.
+
+El escáner implementa políticas como:
+- Bloqueo de palabras sensibles (ej: password, SECRET_KEY)
+- Bloqueo de archivos de configuración sensibles (.env)
+- Restricción de tamaño de archivos
+
+La arquitectura es modular y fácilmente integrable en pipelines CI/CD, permitiendo extender reglas sin modificar el código base.
+
+
+## ¿Qué hace?
+
+- Busca extensiones de archivo prohibidas (ej: `.env`)
+- Detecta palabras sensibles en el contenido de los archivos (ej: `password`, `SECRET_KEY`)
+- Verifica que los archivos no excedan un tamaño máximo definido
+- Reporta los hallazgos con nivel de riesgo (CRITICAL, HIGH, MEDIUM)
+
+## Estructura del proyecto
+
+- `scanner/scanner.py`: Script principal del escáner.
+- `policies.json`: Políticas de seguridad (palabras, extensiones y tamaño máximo).
+- `test_project/`: Carpeta de ejemplo para pruebas.
+- `docs/images/firstTest.png`: Imagen de ejemplo de la ejecución.
+
+## Uso
+
+1. Asegúrate de tener Python instalado.
+2. Ejecuta el escáner desde la raíz del proyecto:
+
+	```
+	python scanner/scanner.py
+	```
+
+3. Ingresa la ruta del directorio a escanear, por ejemplo:
+
+	```
+	test_project
+	```
+
+
+
+# Primera version
+
+## Ejemplo de políticas (`policies.json`)
+
+```json
+{
+  "forbidden_words": ["password", "SECRET_KEY"],
+  "forbidden_extensions": [".env"],
+  "max_file_size": 5000
+}
+```
+
+## Ejemplo de resultado
+
+![Ejecución de ejemplo](docs/images/firstTest.png)
