@@ -18,7 +18,7 @@
                         {
                             "physicalLocation": {
                                 "artifactLocation": {
-                                    "uri": "test_project/3version\\.env"
+                                    "uri": "./test_project/3version\\.env"
                                 }
                             }
                         }
@@ -33,7 +33,7 @@
                         {
                             "physicalLocation": {
                                 "artifactLocation": {
-                                    "uri": "test_project/3version\\app.py"
+                                    "uri": "./test_project/3version\\app.py"
                                 }
                             }
                         }
@@ -48,7 +48,7 @@
                         {
                             "physicalLocation": {
                                 "artifactLocation": {
-                                    "uri": "test_project/3version\\app.py"
+                                    "uri": "./test_project/3version\\app.py"
                                 }
                             }
                         }
@@ -63,7 +63,7 @@
                         {
                             "physicalLocation": {
                                 "artifactLocation": {
-                                    "uri": "test_project/3version\\app.py"
+                                    "uri": "./test_project/3version\\app.py"
                                 }
                             }
                         }
@@ -78,7 +78,7 @@
                         {
                             "physicalLocation": {
                                 "artifactLocation": {
-                                    "uri": "test_project/3version\\requirements.txt"
+                                    "uri": "./test_project/3version\\requirements.txt"
                                 }
                             }
                         }
@@ -93,7 +93,7 @@
                         {
                             "physicalLocation": {
                                 "artifactLocation": {
-                                    "uri": "test_project/3version\\requirements.txt"
+                                    "uri": "./test_project/3version\\requirements.txt"
                                 }
                             }
                         }

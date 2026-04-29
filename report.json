@@ -1,31 +1,31 @@
 [
     {
-        "file": "test_project/3version\\.env",
+        "file": "./test_project/3version\\.env",
         "risk": "CRITICAL",
         "message": "Archivo prohibido (.env)"
     },
     {
-        "file": "test_project/3version\\app.py",
+        "file": "./test_project/3version\\app.py",
         "risk": "HIGH",
         "message": "Credencial hardcodeada detectada: password"
     },
     {
-        "file": "test_project/3version\\app.py",
+        "file": "./test_project/3version\\app.py",
         "risk": "HIGH",
         "message": "Credencial hardcodeada detectada: SECRET_KEY"
     },
     {
-        "file": "test_project/3version\\app.py",
+        "file": "./test_project/3version\\app.py",
         "risk": "HIGH",
         "message": "Uso de funci\u00f3n peligrosa: eval("
     },
     {
-        "file": "test_project/3version\\requirements.txt",
+        "file": "./test_project/3version\\requirements.txt",
         "risk": "CRITICAL",
         "message": "Dependencia vulnerable: flask 1.0"
     },
     {
-        "file": "test_project/3version\\requirements.txt",
+        "file": "./test_project/3version\\requirements.txt",
         "risk": "CRITICAL",
         "message": "Dependencia vulnerable: requests 2.25.0"
     }

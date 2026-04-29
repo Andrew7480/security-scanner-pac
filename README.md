@@ -108,6 +108,76 @@ El proyecto incluye un workflow de GitHub Actions que ejecuta el escáner autom�
 
 ## Historial de versiones
 
+### Versión 7 — Pre-commit hook (Shift Left real)
+
+**¿Qué se agregó?**
+
+- Un hook de pre-commit que ejecuta automáticamente el escáner antes de cada commit.
+- Si se detectan vulnerabilidades críticas, el commit es bloqueado y no puede continuar.
+- Esto implementa el principio Shift Left real: los problemas de seguridad se detectan y corrigen antes de llegar al repositorio.
+
+**¿Cómo se usa?**
+
+1. Crea el archivo `.git/hooks/pre-commit` con el siguiente contenido:
+
+	```bash
+	#!/bin/bash
+	echo "🔍 Ejecutando scanner de seguridad..."
+	python scanner/scanner.py ./test_project
+	if grep -q "CRITICAL" report.json; then
+		 echo "❌ Commit bloqueado por vulnerabilidades críticas"
+		 exit 1
+	fi
+	echo "✅ Commit permitido"
+	```
+
+2. Da permisos de ejecución (en Linux/Mac):
+
+	```bash
+	chmod +x .git/hooks/pre-commit
+	```
+
+En Windows, el hook funciona si tienes Python y grep disponibles (por ejemplo, usando Git Bash).
+
+**¿Qué logra esto?**
+
+- Si hay vulnerabilidades críticas, el commit es bloqueado y se muestra un mensaje de error.
+- Si no hay problemas, el commit se realiza normalmente.
+
+¡Esto ayuda a prevenir la exposición de riesgos antes de subir código al repositorio!
+
+![ShiftLeft](docs/images/ShiftLeftTest.png)
+
+
+
+### Versión 6 — Reducción de falsos positivos (detección avanzada)
+
+**¿Qué se mejoró?**
+
+- Ahora el escáner detecta credenciales hardcodeadas solo si realmente hay una asignación en el código (por ejemplo, `password = "algo"`), usando expresiones regulares (regex).
+- Esto reduce drásticamente los falsos positivos, ya que no alerta por cualquier aparición de palabras sensibles, sino solo cuando representan un riesgo real.
+- La detección de funciones peligrosas (`eval`, `exec`, etc.) ahora es insensible a mayúsculas/minúsculas.
+
+**¿Por qué estos cambios?**
+
+- Los falsos positivos pueden saturar y hacer que los desarrolladores ignoren alertas importantes.
+- Usar regex permite identificar patrones de riesgo real, alineándose con prácticas de herramientas profesionales.
+
+**Ejemplo de detección avanzada:**
+
+Detecta:
+
+```python
+password = "123456"
+SECRET_KEY = 'abc123'
+```
+
+No detecta (no es asignación):
+
+```python
+print("No usar password aquí")
+```
+
 ### Versión 5 — Salida SARIF (estándar de la industria)
 
 **¿Qué se agregó?**
