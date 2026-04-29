@@ -36,17 +36,28 @@ def scan_file(file_path, policies):
             "message": "Archivo supera tamaño permitido"
         })
 
+
     # Leer contenido
     try:
         with open(file_path, "r", errors="ignore") as f:
             content = f.read()
 
+            # Detectar palabras sensibles
             for word in policies["forbidden_words"]:
                 if word in content:
                     findings.append({
                         "file": file_path,
                         "risk": "HIGH",
                         "message": f"Palabra sensible detectada: {word}"
+                    })
+
+            # Detectar funciones peligrosas (SAST básico)
+            for func in policies.get("dangerous_functions", []):
+                if func in content:
+                    findings.append({
+                        "file": file_path,
+                        "risk": "HIGH",
+                        "message": f"Uso de función peligrosa: {func}"
                     })
 
     except:
@@ -72,9 +83,28 @@ if __name__ == "__main__":
     path = input("Ruta a escanear: ")
     findings = run_scan(path)
 
+    # Colores ANSI
+    COLORS = {
+        "CRITICAL": "\033[91m",  # Rojo fuerte
+        "HIGH": "\033[31m",      # Rojo estándar
+        "MEDIUM": "\033[93m",    # Amarillo
+        "LOW": "\033[94m",       # Azul
+        "END": "\033[0m"
+    }
+
+    ICONS = {
+        "CRITICAL": "🛑",
+        "HIGH": "⚠️",
+        "MEDIUM": "🔶",
+        "LOW": "🔹"
+    }
+
     if not findings:
-        print("✅ No se encontraron problemas")
+        print("\033[92m✅ No se encontraron problemas\033[0m")
     else:
-        print("\n🚨 Resultados:")
+        print("\n🚨 \033[1mResultados del escaneo:\033[0m\n")        
         for f in findings:
-            print(f"[{f['risk']}] {f['file']} -> {f['message']}")
+            risk = f["risk"].upper()
+            color = COLORS.get(risk, "")
+            icon = ICONS.get(risk, "")
+            print(f"{icon} {color}[{risk}]{COLORS['END']} {f['file']} -> {f['message']}")

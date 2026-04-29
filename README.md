@@ -2,8 +2,7 @@
 
 ## Descripción
 
-**security-scanner-pac** es una herramienta sencilla para escanear proyectos en busca de archivos y contenidos potencialmente inseguros, basada en políticas configurables. 
-
+**security-scanner-pac** es una herramienta para escanear proyectos en busca de archivos y contenidos potencialmente inseguros, basada en políticas configurables y fácilmente extensible.
 
 ## Justificación y Marco Teórico
 
@@ -11,7 +10,7 @@ La exposición accidental de contraseñas, claves privadas y otra información s
 
 Puedes consultar el documento completo con toda la teoría y justificación aquí:
 
-👉 [Justificación y Marco Teórico del Proyecto](https://pruebacorreoescuelaingeduco-my.sharepoint.com/:w:/g/personal/andres_cardozo-m_mail_escuelaing_edu_co/IQD3YREPCx0MQ6D38vMMeQDsAVGpAF3P8Z0GIh48NKdF4DU?e=9IhLpY)
+1. [Justificación y Marco Teórico del Proyecto](https://pruebacorreoescuelaingeduco-my.sharepoint.com/:w:/g/personal/andres_cardozo-m_mail_escuelaing_edu_co/IQD3YREPCx0MQ6D38vMMeQDsAVGpAF3P8Z0GIh48NKdF4DU?e=9IhLpY)
 
 ### Resumen de la teoría
 
@@ -55,23 +54,68 @@ La arquitectura es modular y fácilmente integrable en pipelines CI/CD, permitie
 3. Ingresa la ruta del directorio a escanear, por ejemplo:
 
 	```
-	test_project
+	test_project/
 	```
 
+## Historial de versiones
 
+### Versión 1 — Detección básica de secretos
 
-# Primera version
+**¿Qué hace?**
 
-## Ejemplo de políticas (`policies.json`)
+- Busca extensiones de archivo prohibidas (ej: `.env`)
+- Detecta palabras sensibles en el contenido de los archivos (ej: `password`, `SECRET_KEY`)
+- Verifica que los archivos no excedan un tamaño máximo definido
+- Reporta los hallazgos con nivel de riesgo (CRITICAL, HIGH, MEDIUM)
+
+**¿Por qué?**
+
+La exposición accidental de contraseñas, claves privadas y otra información sensible dentro del código fuente es una de las vulnerabilidades más comunes. Esta versión demuestra cómo la seguridad puede integrarse en el desarrollo mediante reglas automatizadas y configurables (Policy as Code).
+
+**Ejemplo de políticas (`policies.json`):**
 
 ```json
 {
-  "forbidden_words": ["password", "SECRET_KEY"],
-  "forbidden_extensions": [".env"],
-  "max_file_size": 5000
+	"forbidden_words": ["password", "SECRET_KEY"],
+	"forbidden_extensions": [".env"],
+	"max_file_size": 5000
 }
 ```
 
-## Ejemplo de resultado
+**Ejemplo de resultado:**
 
 ![Ejecución de ejemplo](docs/images/firstTest.png)
+
+---
+
+### Versión 2 — SAST básico y visual mejorado
+
+**¿Qué se agregó?**
+
+- Detección de funciones peligrosas en código fuente (SAST básico): eval(), exec(), etc.
+- Nueva política: `dangerous_functions` en policies.json
+- Salida visual profesional: colores y emojis según nivel de riesgo
+- Leyenda visual explicando los colores y niveles
+
+**¿Por qué estos cambios?**
+
+- El análisis SAST (Static Application Security Testing) permite detectar patrones de código inseguros, no solo secretos expuestos.
+- Mejorar la experiencia del usuario y la interpretación de resultados con una salida visual clara y profesional.
+
+**Ejemplo de política extendida:**
+
+```json
+{
+	"forbidden_words": ["password", "SECRET_KEY"],
+	"forbidden_extensions": [".env"],
+	"max_file_size": 5000,
+	"dangerous_functions": ["eval(", "exec("]
+}
+```
+
+**Ejemplo de resultado:**
+
+![Ejecución de ejemplo](docs/images/secondTest.png)
+
+---
+

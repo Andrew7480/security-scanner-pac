@@ -1,5 +1,6 @@
 {
   "forbidden_words": ["password", "SECRET_KEY"],
   "forbidden_extensions": [".env"],
-  "max_file_size": 5000
+  "max_file_size": 5000,
+  "dangerous_functions": ["eval(", "exec("]
 }
