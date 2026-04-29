@@ -341,4 +341,70 @@ La exposición accidental de contraseñas, claves privadas y otra información s
 
 ![Ejecución de ejemplo](docs/images/firstTest.png)
 
+
+
+
+# Funcionalidades adicionales
+------
+
+## Uso como herramienta CLI
+
+Ahora puedes instalar y ejecutar el escáner como una herramienta de línea de comandos:
+
+1. Instala el paquete localmente (desde la raíz del proyecto):
+
+	```bash
+	pip install -e .
+	```
+
+2. Ejecuta el escáner con el comando:
+
+	```bash
+	secscan ./test_project
+	```
+
+Esto ejecutará el análisis sobre la carpeta indicada y mostrará los resultados en consola, igual que una herramienta profesional.
+
 ---
+
+## Dashboard Web (Visualización de Resultados)
+
+Puedes visualizar los resultados del escáner en una interfaz web sencilla:
+
+1. Instala Flask si no lo tienes:
+
+	```bash
+	pip install flask
+	```
+
+2. Ejecuta el dashboard:
+
+	```bash
+	python dashboard.py
+	```
+
+3. Abre en tu navegador:
+
+	[http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+Verás los hallazgos de seguridad de tu último escaneo en formato visual.
+
+---
+
+## Uso con Docker
+
+Puedes construir y ejecutar el escáner en un contenedor Docker:
+
+1. Construye la imagen:
+
+	```bash
+	docker build -t secscan .
+	```
+
+2. Ejecuta el contenedor:
+
+	```bash
+	docker run secscan
+	```
+
+Esto permite usar el escáner en cualquier entorno de manera profesional.

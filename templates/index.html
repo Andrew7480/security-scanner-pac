@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Security Scanner</title>
+</head>
+<body>
+    <h1>Resultados de Seguridad</h1>
+
+    {% if findings %}
+        <ul>
+        {% for f in findings %}
+            <li>
+                <b>{{ f.risk }}</b> - {{ f.file }} - {{ f.message }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay vulnerabilidades</p>
+    {% endif %}
+</body>
+</html>
