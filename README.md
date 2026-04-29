@@ -60,6 +60,45 @@ La arquitectura es modular y fácilmente integrable en pipelines CI/CD, permitie
 
 Esto permite usar el escáner tanto en pipelines automáticos como de forma manual.
 
+## Integración CI/CD con GitHub Actions
+
+El proyecto incluye un workflow de GitHub Actions que ejecuta el escáner automáticamente en cada push o pull request. El pipeline falla si se detectan vulnerabilidades críticas (CRITICAL) y pasa si no hay problemas graves.
+
+**¿Cómo funciona?**
+
+- El workflow ejecuta:
+
+	```yaml
+	- name: Ejecutar Scanner
+		run: |
+			python scanner/scanner.py ./test_project/3version
+	- name: Validar resultados
+		run: |
+			if grep -q "CRITICAL" report.json; then
+				echo "❌ Vulnerabilidades críticas encontradas"
+				exit 1
+			else
+				echo "✅ Sin vulnerabilidades críticas"
+			fi
+	```
+
+- Si la carpeta escaneada contiene archivos o dependencias vulnerables (como en `test_project/3version`), el pipeline **falla**.
+- Si la carpeta escaneada está limpia (como `test_project/test_que_pasa_ci`), el pipeline **pasa** correctamente.
+
+**Ejemplo de uso:**
+
+- Para probar que el pipeline falla, ejecuta el escáner sobre una carpeta con vulnerabilidades:
+
+	```yaml
+	python scanner/scanner.py ./test_project/3version
+	```
+
+- Para probar que el pipeline pasa, ejecuta el escáner sobre la carpeta limpia:
+
+	```yaml
+	python scanner/scanner.py ./test_project/test_que_pasa_ci
+	```
+
 ## Historial de versiones
 
 ### Versión 4 — Reporte automático en JSON
