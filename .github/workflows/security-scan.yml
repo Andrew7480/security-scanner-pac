@@ -19,7 +19,7 @@ jobs:
 
       - name: Ejecutar Scanner
         run: |
-          python scanner/scanner.py ./test_project/1version
+          python scanner/scanner.py ./test_project/2version
 
       - name: Validar resultados
         run: |
