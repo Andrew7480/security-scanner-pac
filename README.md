@@ -4,6 +4,12 @@
 
 **security-scanner-pac** es una herramienta para escanear proyectos en busca de archivos y contenidos potencialmente inseguros, basada en políticas configurables y fácilmente extensible.
 
+> **¿Quieres usar este escáner en tu propio proyecto?**
+>
+> 👉 Sigue la guía paso a paso en [README_DISTRIBUCION.md](README_DISTRIBUCION.md)
+
+
+
 ## Justificación y Marco Teórico
 
 La exposición accidental de contraseñas, claves privadas y otra información sensible dentro del código fuente representa una de las vulnerabilidades más comunes en el desarrollo de software. Este proyecto surge para demostrar cómo la seguridad puede integrarse directamente en el proceso de desarrollo mediante enfoques automatizados, aplicando el paradigma de "Policy as Code" (PaC) y el principio de "Shift Left" en DevSecOps.
