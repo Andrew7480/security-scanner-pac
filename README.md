@@ -209,6 +209,11 @@ print("No usar password aquí")
 
 ![Mensaje](docs/images/sarifReport.png)
 
+**Ejemplo GitHub**
+
+![Mensaje](docs/images/exampleSarifReport.png)
+
+
 
 ### Versión 4 — Reporte automático en JSON
 
