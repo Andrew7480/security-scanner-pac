@@ -45,17 +45,20 @@ La arquitectura es modular y fácilmente integrable en pipelines CI/CD, permitie
 ## Uso
 
 1. Asegúrate de tener Python instalado.
-2. Ejecuta el escáner desde la raíz del proyecto:
+2. Ejecuta el escáner desde la raíz del proyecto. Puedes pasar la ruta como argumento (recomendado para CI/CD y automatización):
+
+	```
+	python scanner/scanner.py test_project/
+	```
+
+	O bien, si no pasas argumento, el escáner te pedirá la ruta de forma interactiva:
 
 	```
 	python scanner/scanner.py
+	# Luego ingresa la ruta cuando lo solicite
 	```
 
-3. Ingresa la ruta del directorio a escanear, por ejemplo:
-
-	```
-	test_project/
-	```
+Esto permite usar el escáner tanto en pipelines automáticos como de forma manual.
 
 ## Historial de versiones
 

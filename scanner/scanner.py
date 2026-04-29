@@ -1,6 +1,6 @@
-
 import os
 import json
+import sys
 
 # Cargar políticas
 def load_policies():
@@ -105,7 +105,12 @@ def run_scan(directory):
 
 # Main
 if __name__ == "__main__":
-    path = input("Ruta a escanear: ")
+
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+    else:
+        path = input("Ruta a escanear: ")
+
     findings = run_scan(path)
 
     # Colores ANSI

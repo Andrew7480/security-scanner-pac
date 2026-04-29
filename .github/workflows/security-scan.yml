@@ -1,0 +1,31 @@
+name: Security Scan
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Ejecutar Scanner
+        run: |
+          python scanner/scanner.py ./test_project/1version
+
+      - name: Validar resultados
+        run: |
+          if grep -q "CRITICAL" report.json; then
+            echo "❌ Vulnerabilidades críticas encontradas"
+            exit 1
+          else
+            echo "✅ Sin vulnerabilidades críticas"
+          fi
