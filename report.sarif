@@ -27,22 +27,7 @@
                 {
                     "ruleId": "HIGH",
                     "message": {
-                        "text": "Palabra sensible detectada: SECRET_KEY"
-                    },
-                    "locations": [
-                        {
-                            "physicalLocation": {
-                                "artifactLocation": {
-                                    "uri": "test_project/3version\\.env"
-                                }
-                            }
-                        }
-                    ]
-                },
-                {
-                    "ruleId": "HIGH",
-                    "message": {
-                        "text": "Palabra sensible detectada: password"
+                        "text": "Credencial hardcodeada detectada: password"
                     },
                     "locations": [
                         {
@@ -57,7 +42,7 @@
                 {
                     "ruleId": "HIGH",
                     "message": {
-                        "text": "Palabra sensible detectada: SECRET_KEY"
+                        "text": "Credencial hardcodeada detectada: SECRET_KEY"
                     },
                     "locations": [
                         {

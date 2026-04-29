@@ -21,6 +21,11 @@ jobs:
         run: |
           python scanner/scanner.py ./test_project/test_que_pasa_ci
 
+      - name: Subir resultados SARIF
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: report.sarif
+
       - name: Validar resultados
         run: |
           if grep -q "CRITICAL" report.json; then

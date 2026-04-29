@@ -60,23 +60,26 @@ def scan_file(file_path, policies):
         })
 
 
+
     # Leer contenido
     try:
+        import re
         with open(file_path, "r", errors="ignore") as f:
             content = f.read()
 
-            # Detectar palabras sensibles
+            # Detectar credenciales hardcodeadas (regex)
             for word in policies["forbidden_words"]:
-                if word in content:
+                pattern = rf"{word}\s*=\s*['\"].+['\"]"
+                if re.search(pattern, content, re.IGNORECASE):
                     findings.append({
                         "file": file_path,
                         "risk": "HIGH",
-                        "message": f"Palabra sensible detectada: {word}"
+                        "message": f"Credencial hardcodeada detectada: {word}"
                     })
 
             # Detectar funciones peligrosas (SAST básico)
             for func in policies.get("dangerous_functions", []):
-                if func in content:
+                if func.lower() in content.lower():
                     findings.append({
                         "file": file_path,
                         "risk": "HIGH",

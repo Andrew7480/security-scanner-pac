@@ -5,19 +5,14 @@
         "message": "Archivo prohibido (.env)"
     },
     {
-        "file": "test_project/3version\\.env",
+        "file": "test_project/3version\\app.py",
         "risk": "HIGH",
-        "message": "Palabra sensible detectada: SECRET_KEY"
+        "message": "Credencial hardcodeada detectada: password"
     },
     {
         "file": "test_project/3version\\app.py",
         "risk": "HIGH",
-        "message": "Palabra sensible detectada: password"
-    },
-    {
-        "file": "test_project/3version\\app.py",
-        "risk": "HIGH",
-        "message": "Palabra sensible detectada: SECRET_KEY"
+        "message": "Credencial hardcodeada detectada: SECRET_KEY"
     },
     {
         "file": "test_project/3version\\app.py",
