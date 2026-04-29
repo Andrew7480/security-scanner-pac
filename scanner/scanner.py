@@ -1,3 +1,4 @@
+
 import os
 import json
 import sys
@@ -86,7 +87,41 @@ def scan_file(file_path, policies):
         pass
 
     return findings
+# Generar reporte SARIF
+def generate_sarif(findings):
+    sarif = {
+        "version": "2.1.0",
+        "runs": [
+            {
+                "tool": {
+                    "driver": {
+                        "name": "Custom Security Scanner",
+                        "rules": []
+                    }
+                },
+                "results": []
+            }
+        ]
+    }
 
+    for f in findings:
+        sarif["runs"][0]["results"].append({
+            "ruleId": f["risk"],
+            "message": {"text": f["message"]},
+            "locations": [
+                {
+                    "physicalLocation": {
+                        "artifactLocation": {
+                            "uri": f["file"]
+                        }
+                    }
+                }
+            ]
+        })
+
+    with open("report.sarif", "w") as f:
+        json.dump(sarif, f, indent=4)
+        
 # Ejecutar escaneo
 def run_scan(directory):
     policies = load_policies()
@@ -140,7 +175,12 @@ if __name__ == "__main__":
             icon = ICONS.get(risk, "")
             print(f"{icon} {color}[{risk}]{COLORS['END']} {f['file']} -> {f['message']}")
 
+
     # Guardar reporte en JSON
     with open("report.json", "w") as f:
         json.dump(findings, f, indent=4)
     print("\n📁 Reporte generado: report.json")
+
+    # Guardar reporte en SARIF
+    generate_sarif(findings)
+    print("📁 Reporte SARIF generado: report.sarif")

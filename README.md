@@ -99,7 +99,35 @@ El proyecto incluye un workflow de GitHub Actions que ejecuta el escáner autom�
 	python scanner/scanner.py ./test_project/test_que_pasa_ci
 	```
 
+
+**Prueba**
+
+![CI/CD](docs/images/cicdTest.png)
+
+
+
 ## Historial de versiones
+
+### Versión 5 — Salida SARIF (estándar de la industria)
+
+**¿Qué se agregó?**
+
+- El escáner ahora genera automáticamente un archivo `report.sarif` en formato SARIF (Static Analysis Results Interchange Format) cada vez que se ejecuta.
+- SARIF es el estándar abierto utilizado por herramientas profesionales de seguridad y análisis estático para reportar hallazgos de manera estructurada y compatible con plataformas como GitHub Advanced Security, Azure DevOps, SonarQube, etc.
+
+**¿Por qué estos cambios?**
+
+- Permite integrar los resultados del escáner con sistemas de CI/CD, dashboards de seguridad y otras herramientas de análisis.
+- Facilita la visualización, trazabilidad y auditoría de vulnerabilidades en entornos empresariales.
+
+**Archivos generados:**
+
+- `report.sarif` — Reporte estructurado en formato estándar de la industria.
+
+**Ejemplo:**
+
+![Mensaje](docs/images/sarifReport.png)
+
 
 ### Versión 4 — Reporte automático en JSON
 
