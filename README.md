@@ -59,6 +59,37 @@ La arquitectura es modular y fácilmente integrable en pipelines CI/CD, permitie
 
 ## Historial de versiones
 
+### Versión 4 — Reporte automático en JSON
+
+**¿Qué se agregó?**
+
+- Al finalizar cada escaneo, se genera automáticamente un archivo `report.json` con todos los hallazgos en formato estructurado.
+- Se muestra un mensaje en consola indicando la generación del reporte.
+- Permite guardar evidencia, compartir resultados y facilitar la integración con otras herramientas.
+
+**¿Por qué estos cambios?**
+
+- Generar reportes automáticos es una práctica estándar en la industria, útil para auditorías, CI/CD y trazabilidad.
+- Facilita la revisión y el análisis posterior de los resultados.
+
+**Ejemplo de archivos generados:**
+
+![Mensaje](docs/images/GuardaReport.png)
+![Archivo generado](docs/images/exampleReport.png)
+
+**Mensaje en consola:**
+
+```
+📁 Reporte generado: report.json
+```
+
+![](docs/images/GuardaReport.png)
+![](docs/images/exampleReport.png)
+
+
+
+
+
 ### Versión 3 — SCA: Detección de dependencias vulnerables
 
 **¿Qué se agregó?**

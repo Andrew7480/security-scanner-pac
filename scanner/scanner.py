@@ -124,6 +124,7 @@ if __name__ == "__main__":
         "LOW": "🔹"
     }
 
+
     if not findings:
         print("\033[92m✅ No se encontraron problemas\033[0m")
     else:
@@ -133,3 +134,8 @@ if __name__ == "__main__":
             color = COLORS.get(risk, "")
             icon = ICONS.get(risk, "")
             print(f"{icon} {color}[{risk}]{COLORS['END']} {f['file']} -> {f['message']}")
+
+    # Guardar reporte en JSON
+    with open("report.json", "w") as f:
+        json.dump(findings, f, indent=4)
+    print("\n📁 Reporte generado: report.json")
