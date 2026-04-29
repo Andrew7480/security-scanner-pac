@@ -146,8 +146,13 @@ En Windows, el hook funciona si tienes Python y grep disponibles (por ejemplo, u
 
 ¡Esto ayuda a prevenir la exposición de riesgos antes de subir código al repositorio!
 
+**Error si hay algo critico**
+
 ![ShiftLeft](docs/images/ShiftLeftTest.png)
 
+**Pasa si no hay vulnerabilidades**
+
+![ShiftLeft](docs/images/ShiftLeftPass.png)
 
 
 ### Versión 6 — Reducción de falsos positivos (detección avanzada)
