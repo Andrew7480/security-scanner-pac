@@ -24,7 +24,7 @@ jobs:
 
       - name: Ejecutar Scanner
         run: |
-          python scanner/scanner.py ./test_project/test_que_pasa_ci
+          python scanner/scanner.py ./test_project/3version
 
       - name: Subir resultados SARIF
         uses: github/codeql-action/upload-sarif@v3
