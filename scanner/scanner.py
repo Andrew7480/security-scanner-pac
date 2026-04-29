@@ -1,3 +1,4 @@
+
 import os
 import json
 
@@ -5,7 +6,28 @@ import json
 def load_policies():
     with open("policies.json", "r") as f:
         return json.load(f)
+# SCA: Escaneo de dependencias vulnerables
+def scan_dependencies(file_path):
+    findings = []
 
+    if file_path.endswith("requirements.txt"):
+        with open(file_path, "r") as f:
+            deps = f.readlines()
+
+        with open("vuln_db.json", "r") as v:
+            vuln_db = json.load(v)
+
+        for dep in deps:
+            if "==" in dep:
+                name, version = dep.strip().split("==")
+                if name in vuln_db and version in vuln_db[name]:
+                    findings.append({
+                        "file": file_path,
+                        "risk": "CRITICAL",
+                        "message": f"Dependencia vulnerable: {name} {version}"
+                    })
+
+    return findings
 # Leer archivos
 def get_files(directory):
     file_list = []
@@ -74,7 +96,10 @@ def run_scan(directory):
 
     for file in files:
         results = scan_file(file, policies)
+        dep_results = scan_dependencies(file)
+
         all_findings.extend(results)
+        all_findings.extend(dep_results)
 
     return all_findings
 

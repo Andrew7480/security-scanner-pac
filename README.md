@@ -59,34 +59,42 @@ La arquitectura es modular y fácilmente integrable en pipelines CI/CD, permitie
 
 ## Historial de versiones
 
-### Versión 1 — Detección básica de secretos
+### Versión 3 — SCA: Detección de dependencias vulnerables
 
-**¿Qué hace?**
+**¿Qué se agregó?**
 
-- Busca extensiones de archivo prohibidas (ej: `.env`)
-- Detecta palabras sensibles en el contenido de los archivos (ej: `password`, `SECRET_KEY`)
-- Verifica que los archivos no excedan un tamaño máximo definido
-- Reporta los hallazgos con nivel de riesgo (CRITICAL, HIGH, MEDIUM)
+- Análisis de dependencias (SCA, Software Composition Analysis):
+	- Detecta automáticamente dependencias vulnerables en archivos `requirements.txt`.
+	- Utiliza una base de datos simulada (`vuln_db.json`) para identificar versiones inseguras.
+- Reporta dependencias vulnerables como hallazgos CRITICAL en el escaneo.
 
-**¿Por qué?**
+**¿Por qué estos cambios?**
 
-La exposición accidental de contraseñas, claves privadas y otra información sensible dentro del código fuente es una de las vulnerabilidades más comunes. Esta versión demuestra cómo la seguridad puede integrarse en el desarrollo mediante reglas automatizadas y configurables (Policy as Code).
+- El análisis SCA permite identificar riesgos en librerías de terceros, una de las fuentes más frecuentes de vulnerabilidades en proyectos modernos.
+- Facilita la detección temprana de componentes inseguros antes de que lleguen a producción.
 
-**Ejemplo de políticas (`policies.json`):**
+**Ejemplo de archivos:**
 
+`test_project/3version`
+```txt
+flask==1.0
+requests==2.25.0
+```
+
+`vuln_db.json`
 ```json
 {
-	"forbidden_words": ["password", "SECRET_KEY"],
-	"forbidden_extensions": [".env"],
-	"max_file_size": 5000
+	"flask": ["1.0"],
+	"requests": ["2.25.0"]
 }
 ```
 
 **Ejemplo de resultado:**
+![Ejecución de ejemplo](docs/images/thirdTest.png)
 
-![Ejecución de ejemplo](docs/images/firstTest.png)
 
----
+
+
 
 ### Versión 2 — SAST básico y visual mejorado
 
@@ -119,3 +127,31 @@ La exposición accidental de contraseñas, claves privadas y otra información s
 
 ---
 
+### Versión 1 — Detección básica de secretos
+
+**¿Qué hace?**
+
+- Busca extensiones de archivo prohibidas (ej: `.env`)
+- Detecta palabras sensibles en el contenido de los archivos (ej: `password`, `SECRET_KEY`)
+- Verifica que los archivos no excedan un tamaño máximo definido
+- Reporta los hallazgos con nivel de riesgo (CRITICAL, HIGH, MEDIUM)
+
+**¿Por qué?**
+
+La exposición accidental de contraseñas, claves privadas y otra información sensible dentro del código fuente es una de las vulnerabilidades más comunes. Esta versión demuestra cómo la seguridad puede integrarse en el desarrollo mediante reglas automatizadas y configurables (Policy as Code).
+
+**Ejemplo de políticas (`policies.json`):**
+
+```json
+{
+	"forbidden_words": ["password", "SECRET_KEY"],
+	"forbidden_extensions": [".env"],
+	"max_file_size": 5000
+}
+```
+
+**Ejemplo de resultado:**
+
+![Ejecución de ejemplo](docs/images/firstTest.png)
+
+---
