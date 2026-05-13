@@ -1,21 +1,425 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Security Scanner</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SecScan — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #080b10;
+      --surface:   #0d1117;
+      --card:      #131920;
+      --border:    #1e2d3d;
+      --border2:   #243040;
+      --text:      #c9d1d9;
+      --muted:     #5a6a7a;
+      --blue:      #388bfd;
+      --crit:      #f85149;
+      --crit-bg:   rgba(248,81,73,0.10);
+      --crit-glow: rgba(248,81,73,0.25);
+      --high:      #e3a008;
+      --high-bg:   rgba(227,160,8,0.10);
+      --high-glow: rgba(227,160,8,0.25);
+      --med:       #58a6ff;
+      --med-bg:    rgba(88,166,255,0.08);
+      --med-glow:  rgba(88,166,255,0.20);
+      --ok:        #3fb950;
+      --ok-bg:     rgba(63,185,80,0.10);
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-head: 'Syne', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56,139,253,0.06), transparent),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(30,45,61,0.3) 39px, rgba(30,45,61,0.3) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(30,45,61,0.3) 39px, rgba(30,45,61,0.3) 40px);
+    }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, #388bfd, #58a6ff);
+      border-radius: 6px;
+      display: grid; place-items: center;
+      font-size: 14px;
+    }
+    .logo span { color: var(--blue); }
+    .header-meta {
+      color: var(--muted);
+      font-size: 11px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .header-meta .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 6px var(--ok);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* ── LAYOUT ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    .page-title {
+      font-family: var(--font-head);
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.1s forwards;
+    }
+    .page-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.2s forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SUMMARY CARDS ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { border-color: var(--border2); }
+    .card:nth-child(1) { animation-delay: 0.15s; }
+    .card:nth-child(2) { animation-delay: 0.22s; }
+    .card:nth-child(3) { animation-delay: 0.29s; }
+    .card:nth-child(4) { animation-delay: 0.36s; }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .card.total::before  { background: linear-gradient(90deg, var(--blue), transparent); }
+    .card.crit::before   { background: linear-gradient(90deg, var(--crit), transparent); }
+    .card.high::before   { background: linear-gradient(90deg, var(--high), transparent); }
+    .card.med::before    { background: linear-gradient(90deg, var(--med), transparent); }
+
+    .card-label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 10px;
+    }
+    .card-value {
+      font-family: var(--font-head);
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .card.total .card-value { color: var(--text); }
+    .card.crit  .card-value { color: var(--crit); text-shadow: 0 0 20px var(--crit-glow); }
+    .card.high  .card-value { color: var(--high); text-shadow: 0 0 20px var(--high-glow); }
+    .card.med   .card-value { color: var(--med);  text-shadow: 0 0 20px var(--med-glow); }
+
+    .card-desc { font-size: 11px; color: var(--muted); }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.4s forwards;
+    }
+    .filter-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.5px;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      color: var(--text);
+      border-color: var(--border2);
+      background: var(--border);
+    }
+    .filter-btn.active.f-crit { border-color: var(--crit); color: var(--crit); }
+    .filter-btn.active.f-high { border-color: var(--high); color: var(--high); }
+    .filter-btn.active.f-med  { border-color: var(--med);  color: var(--med); }
+
+    .spacer { flex: 1; }
+    .count-badge {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.45s forwards;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      text-align: left;
+      padding: 11px 16px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+    td { padding: 13px 16px; vertical-align: top; }
+
+    /* severity badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      white-space: nowrap;
+    }
+    .badge::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+    }
+    .badge.CRITICAL {
+      background: var(--crit-bg);
+      color: var(--crit);
+      border: 1px solid rgba(248,81,73,0.3);
+    }
+    .badge.CRITICAL::before { background: var(--crit); box-shadow: 0 0 4px var(--crit); }
+    .badge.HIGH {
+      background: var(--high-bg);
+      color: var(--high);
+      border: 1px solid rgba(227,160,8,0.3);
+    }
+    .badge.HIGH::before { background: var(--high); box-shadow: 0 0 4px var(--high); }
+    .badge.MEDIUM {
+      background: var(--med-bg);
+      color: var(--med);
+      border: 1px solid rgba(88,166,255,0.25);
+    }
+    .badge.MEDIUM::before { background: var(--med); box-shadow: 0 0 4px var(--med); }
+
+    .file-path {
+      font-size: 12px;
+      color: var(--blue);
+      word-break: break-all;
+    }
+    .file-path::before { content: '~/'; color: var(--muted); }
+
+    .msg-cell { color: var(--text); font-size: 12px; line-height: 1.5; }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 64px 24px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.45s forwards;
+    }
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .empty h2 {
+      font-family: var(--font-head);
+      font-size: 20px;
+      color: var(--ok);
+      margin-bottom: 8px;
+    }
+    .empty p { color: var(--muted); font-size: 12px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      th:nth-child(3), td:nth-child(3) { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Resultados de Seguridad</h1>
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🛡</div>
+      Sec<span>Scan</span>
+    </div>
+    <div class="header-meta">
+      <div class="dot"></div>
+      <span>Policy as Code · DevSecOps</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-title">Security Report</div>
+    <div class="page-subtitle">Resultados del último escaneo · report.json</div>
+
+    {# ── Cálculo de conteos con Jinja2 ── #}
+    {% set criticals = findings | selectattr('risk', 'equalto', 'CRITICAL') | list %}
+    {% set highs     = findings | selectattr('risk', 'equalto', 'HIGH')     | list %}
+    {% set mediums   = findings | selectattr('risk', 'equalto', 'MEDIUM')   | list %}
+
+    <!-- CARDS -->
+    <div class="cards">
+      <div class="card total">
+        <div class="card-label">Total hallazgos</div>
+        <div class="card-value">{{ findings | length }}</div>
+        <div class="card-desc">vulnerabilidades detectadas</div>
+      </div>
+      <div class="card crit">
+        <div class="card-label">Critical</div>
+        <div class="card-value">{{ criticals | length }}</div>
+        <div class="card-desc">requieren acción inmediata</div>
+      </div>
+      <div class="card high">
+        <div class="card-label">High</div>
+        <div class="card-value">{{ highs | length }}</div>
+        <div class="card-desc">riesgo elevado</div>
+      </div>
+      <div class="card med">
+        <div class="card-label">Medium</div>
+        <div class="card-value">{{ mediums | length }}</div>
+        <div class="card-desc">revisar pronto</div>
+      </div>
+    </div>
 
     {% if findings %}
-        <ul>
-        {% for f in findings %}
-            <li>
-                <b>{{ f.risk }}</b> - {{ f.file }} - {{ f.message }}
-            </li>
-        {% endfor %}
-        </ul>
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filter('ALL', this)">Todos</button>
+        <button class="filter-btn f-crit" onclick="filter('CRITICAL', this)">Critical</button>
+        <button class="filter-btn f-high" onclick="filter('HIGH', this)">High</button>
+        <button class="filter-btn f-med"  onclick="filter('MEDIUM', this)">Medium</button>
+        <div class="spacer"></div>
+        <span class="count-badge" id="countBadge">{{ findings | length }} hallazgos</span>
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-wrap">
+        <table id="findingsTable">
+          <thead>
+            <tr>
+              <th style="width:110px">Severidad</th>
+              <th style="width:280px">Archivo</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in findings %}
+            <tr class="finding-row" data-risk="{{ f.risk }}">
+              <td><span class="badge {{ f.risk }}">{{ f.risk }}</span></td>
+              <td><span class="file-path">{{ f.file }}</span></td>
+              <td class="msg-cell">{{ f.message }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
     {% else %}
-        <p>No hay vulnerabilidades</p>
+
+      <!-- EMPTY STATE -->
+      <div class="empty">
+        <span class="empty-icon">✅</span>
+        <h2>Sin vulnerabilidades detectadas</h2>
+        <p>El escáner no encontró hallazgos en el último reporte.<br>
+           Ejecuta <code>python scanner/scanner.py &lt;ruta&gt;</code> para generar un nuevo análisis.</p>
+      </div>
+
     {% endif %}
+  </main>
+
+  <script>
+    function filter(level, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const rows = document.querySelectorAll('.finding-row');
+      let visible = 0;
+      rows.forEach(row => {
+        const match = level === 'ALL' || row.dataset.risk === level;
+        row.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+
+      const badge = document.getElementById('countBadge');
+      if (badge) badge.textContent = visible + ' hallazgo' + (visible !== 1 ? 's' : '');
+    }
+  </script>
+
 </body>
 </html>
